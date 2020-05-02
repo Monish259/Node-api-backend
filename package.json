@@ -2,6 +2,10 @@
   "name": "node-api",
   "version": "1.0.0",
   "description": "Node API",
+  "engines": {
+    "npm": "6.12.1",
+    "node": "12.13.1"
+  },
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js"
