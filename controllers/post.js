@@ -145,9 +145,9 @@ exports.deleteUserPosts = (req,res) => {
 };
 
 //like post
-exports.like = (req,res) => {
+exports.like = async (req,res) => {
     console.log(" YO u hit like button mann!!! POSTID :" + req.body.postId + "  USERID : " + req.body.userId) ;
-    Post.findByIdAndUpdate( req.body.postId , { $push : {likes : req.body.userId}} ,{ new : true })
+    await Post.findByIdAndUpdate( req.body.postId , { $push : {likes : req.body.userId}} ,{ new : true })
     .exec( (err,result) => {
         if(err) return res.status(400).json({ error : err });
        
@@ -159,9 +159,9 @@ exports.like = (req,res) => {
 };
 
 //unlike post
-exports.unlike = (req,res) => {
+exports.unlike = async (req,res) => {
     const {postId,userId} = req.body;
-    Post.findByIdAndUpdate( postId , { $pull : {likes : userId}} ,{ new : true })
+    await Post.findByIdAndUpdate( postId , { $pull : {likes : userId}} ,{ new : true })
     .exec( (err,result) => {
         if(err) return res.status(400).json({ error : err });
         else res.json(result);
@@ -170,11 +170,11 @@ exports.unlike = (req,res) => {
 };
 
 //comment
-exports.comment = (req, res) => {
+exports.comment = async (req, res) => {
     let comment = req.body.comment;
     comment.postedBy = req.body.userId;
 
-    Post.findByIdAndUpdate(req.body.postId, { $push: { comments: comment } }, { new: true })
+    await Post.findByIdAndUpdate(req.body.postId, { $push: { comments: comment } }, { new: true })
         .populate('comments.postedBy', '_id name')
         //.populate('postedBy', '_id name')
         .exec((err, result) => {

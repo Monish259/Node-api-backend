@@ -27,10 +27,10 @@ exports.signUp = async (req,res) => {
 };
 
 
-exports.signIn = (req,res) => {
+exports.signIn = async (req,res) => {
     const {email,password} = req.body;
     //check if email exists
-    User.findOne({email} , (err,user) => {
+    await User.findOne({email} , (err,user) => {
             //if error comes or user with entered email is not registered
             if(err || !user) {
                return res.status(400).json({
@@ -80,14 +80,14 @@ exports.requireSignin = expressJwt ({
 });
 
 //send link to user email to reset password
-exports.forgotPassword = (req,res) => {
+exports.forgotPassword =  async (req,res) => {
     if (!req.body) return res.status(400).json({ message: "No request body" });
     if (!req.body.email)
         return res.status(400).json({ message: "No Email in request body" });
     console.log("forgot password finding user with that email");
 
     const {email} = req.body;
-    User.findOne({email} ,(err,user) => {
+    await User.findOne({email} ,(err,user) => {
         if(err || !user) 
         return res.status("401").json({
             error: "User with that email does not exist!"
@@ -124,10 +124,10 @@ exports.forgotPassword = (req,res) => {
 };
 
 //to reset password
-exports.resetPassword = (req, res) => {
+exports.resetPassword = async(req, res) => {
     let { resetPasswordLink, newPassword } = req.body;
 
-    User.findOne({ resetPasswordLink }, (err, user) => {
+    await User.findOne({ resetPasswordLink }, (err, user) => {
         // if err or no user
         if (err || !user)
             return res.status("401").json({
